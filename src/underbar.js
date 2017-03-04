@@ -86,11 +86,13 @@
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, test) {
     var tested = [];
-    for (var i = 0; i < collection.length; i++) {
-      if (test(collection[i])) {
-        tested.push(collection[i]);
+
+    _.each(collection, function(index) {
+      if (test(index)) {
+        tested.push(index);
       }
-    }
+    });
+
     return tested;
   };
 
@@ -99,11 +101,14 @@
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
     var tested = [];
-    for (var i = 0; i < collection.length; i++) {
-      if (!test(collection[i])) {
-        tested.push(collection[i]);
+    var filter = _.filter(collection, test);
+
+    _.each(collection, function(index) {
+      if (_.indexOf(filter, index) === -1) {
+        tested.push(index);
       }
-    }
+    });
+
     return tested;
   };
 
@@ -138,9 +143,11 @@
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
     var mapped = [];
-    for (var i = 0; i < collection.length; i++) {
-      mapped.push(iterator(collection[i]));
-    }
+
+    _.each(collection, function(index) {
+      mapped.push(iterator(index));
+    })
+
     return mapped;
   };
 
@@ -192,9 +199,9 @@
       }
       return accumulator;
     } else {
-      for (var i = 0; i < collection.length; i++) {
-        accumulator = iterator(accumulator, collection[i]);
-      }
+      _.each(collection, function(index) {
+        accumulator = iterator(accumulator, index);
+      })
       return accumulator;
     }
   };
