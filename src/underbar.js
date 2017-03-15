@@ -543,11 +543,33 @@
   // Takes an arbitrary number of arrays and produces an array that contains
   // every item shared between all the passed-in arrays.
   _.intersection = function() {
+    var result = [];
+
+    for (var i = 1; i < arguments.length; i++) {
+      for (var j = 0; j < arguments[0].length; j++) {
+        var index = _.indexOf(arguments[i], arguments[0][j]);
+        if (index !== -1) {
+          result.push(arguments[i][index]);
+        }
+      }
+    }
+
+    return result;
   };
 
   // Take the difference between one array and a number of other arrays.
   // Only the elements present in just the first array will remain.
   _.difference = function(array) {
+    for (var i = 0; i < array.length; i++) {
+      for (var j = 1; j < arguments.length; j++) {
+        var index = _.indexOf(arguments[j], array[i]);
+        if (index !== -1) {
+          array.splice(i, 1);
+          i--;
+        }
+      }
+    }
+    return array;
   };
 
   // Returns a function, that, when invoked, will only be triggered at most once
