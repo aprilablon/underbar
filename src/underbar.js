@@ -546,9 +546,12 @@
     var result = [];
 
     for (var i = 1; i < arguments.length; i++) {
+      var sameEntries = [];
       for (var j = 0; j < arguments[0].length; j++) {
         var index = _.indexOf(arguments[i], arguments[0][j]);
-        if (index !== -1) {
+        var sameIndex = _.indexOf(sameEntries, arguments[0][j]);
+        if (index !== -1 && (sameIndex !== -1 || i === 1)) {
+          sameEntries.push(arguments[i][index]);
           result.push(arguments[i][index]);
         }
       }
@@ -578,5 +581,21 @@
   //
   // Note: This is difficult! It may take a while to implement.
   _.throttle = function(func, wait) {
+    var counter = 0;
+    var increment = function() {
+      return counter += 1;
+    }
+    var originalDate = new Date().getMilliseconds();
+    return function() {
+      var callDate = new Date().getMilliseconds();
+      var diff = callDate - originalDate;
+      if (diff >= 0 && counter === 0) {
+        counter++;
+        return func();
+      } else if (counter === 1 && diff > wait) {
+        counter = 0;
+        var originalDate = new Date().getMilliseconds();
+      } 
+    };
   };
 }());
